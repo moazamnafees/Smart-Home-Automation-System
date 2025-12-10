@@ -26,7 +26,7 @@
 #include <PubSubClient.h>
 #include "DHT.h"
 
-// ----------------------------- User Config -----------------------------
+// User Config 
 const char* WIFI_SSID = "<YOUR_WIFI_SSID>";
 const char* WIFI_PASS = "<YOUR_WIFI_PASSWORD>";
 
@@ -63,7 +63,7 @@ const unsigned long SENSOR_PUBLISH_INTERVAL = 5000; // publish every 5s
 const unsigned long HEARTBEAT_INTERVAL = 60000;     // publish heartbeat every 60s
 const unsigned long MOTION_DEBOUNCE_MS = 500;       // basic debounce
 
-// ----------------------------- Globals -----------------------------
+//  Globals 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 DHT dht(DHT_PIN, DHT_TYPE);
@@ -76,7 +76,7 @@ bool lastMotionState = false;
 bool fanState = false;
 bool lightState = false;
 
-// ----------------------------- Helper Functions -----------------------------
+// Helper Functions 
 void buildTopics() {
   topic_temp = String(BASE_TOPIC) + "/temperature";
   topic_motion = String(BASE_TOPIC) + "/motion";
@@ -186,8 +186,7 @@ void mqttReconnect() {
   }
 }
 
-// ----------------------------- Setup & Loop -----------------------------
-void setup() {
+// Setup & Loop
   Serial.begin(115200);
   delay(100);
 
@@ -226,7 +225,7 @@ void loop() {
 
   unsigned long now = millis();
 
-  // ------------------ Motion Handling (edge detect + debounce) -------------------
+  // Motion Handling (edge detect + debounce) 
   bool motion = digitalRead(PIR_PIN);
   if (motion != lastMotionState) {
     // Simple debounce/time guard
@@ -240,7 +239,7 @@ void loop() {
     }
   }
 
-  // ------------------ Periodic sensor publish (temperature/humidity) -------------
+  //  Periodic sensor publish (temperature/humidity) 
   if (now - lastSensorPublish >= SENSOR_PUBLISH_INTERVAL) {
     lastSensorPublish = now;
 
@@ -260,7 +259,7 @@ void loop() {
     }
   }
 
-  // ------------------ Heartbeat (status) -------------
+  // Heartbeat (status) 
   if (now - lastHeartbeat >= HEARTBEAT_INTERVAL) {
     lastHeartbeat = now;
     String hb = String("{\"ip\":\"") + WiFi.localIP().toString() + String("\",\"uptime_ms\":") + String(millis()) + String("}");
